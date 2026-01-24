@@ -3,6 +3,7 @@ package root.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Getter
 public class CaddyLog {
     public String level;
     public Instant ts;
