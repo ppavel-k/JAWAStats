@@ -51,7 +51,14 @@ public class AggregateService {
                 }
 
             }
+
+            // add search engines: Bing, Google, Seznam
+            // add search phrases
+            // add browsers
+            // add browser languages
         }
+
+        // store processed date (and line)
 
     }
 

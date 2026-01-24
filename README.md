@@ -1,7 +1,8 @@
 # JAWAStats - AWStats on Java Web Statistics
 
+Inspired by end of life AWStats (see below) and focused only on Caddy server side logs.
 
-
+Development is in progress.
 
 # AWStats - Advanced Web Statistics
 
