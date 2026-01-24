@@ -23,24 +23,37 @@ public class AggregateService {
     CounterStore.DayOfYearBotHits dayOfYearBotHits = new CounterStore.DayOfYearBotHits();
     CounterStore.DayOfYearResponseCode dayOfYearResponseCode = new CounterStore.DayOfYearResponseCode();
 
+    CounterStore.DayOfYearRefererHits dayOfYearRefererHits = new CounterStore.DayOfYearRefererHits();
+
+    CounterStore.DayOfYearPageHits dayOfYearPageHits = new CounterStore.DayOfYearPageHits();
+
+
     public void process(CaddyLog caddyLog) {
 
         ZonedDateTime zonedDateTime = caddyLog.getTs().atZone(ZoneId.systemDefault());
         dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
         monthOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal());
-        dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), Support.ipToInterface(caddyLog.getRequest().remoteIp));
         dayOfYearResponseCode.addCode(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.status);
 
-        if (caddyLog.getRequest().headers != null) {
-            List<String> from = caddyLog.getRequest().headers.get("From");
-            if (from != null && !from.isEmpty()) {
-                dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), from.getFirst());
+        if (caddyLog.getRequest() != null) {
+            dayOfYearPageHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.getRequest().uri);
+            dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), Support.ipToInterface(caddyLog.getRequest().remoteIp));
+
+            if (caddyLog.getRequest().headers != null) {
+                List<String> from = caddyLog.getRequest().headers.get("From");
+                if (from != null && !from.isEmpty()) {
+                    dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), from.getFirst());
+                }
+
+                List<String> referer = caddyLog.getRequest().headers.get("Referer");
+                if (referer != null && !referer.isEmpty()) {
+                    dayOfYearRefererHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), referer.getFirst());
+                }
+
             }
         }
 
     }
-
-
 
 
 }
