@@ -4,10 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import root.model.CaddyLog;
 import root.model.DayOfYear;
+import root.model.DayOfYearBot;
+import root.model.DayOfYearHost;
 import root.model.MonthOfYear;
 import root.model.Year;
 import root.service.AggregateService;
 import root.service.ParseService;
+import root.util.Support;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static root.util.Support.interfaceToIp;
 
 public class LogParserTest {
 
@@ -61,6 +65,12 @@ public class LogParserTest {
 
         Map<MonthOfYear, Integer> dayHitsPerMonthYear = aggregateService.getMonthOfYearHits().getHits();
         assertEquals(24, dayHitsPerMonthYear.get(new MonthOfYear(2025, 10)));
+
+        Map<DayOfYearHost, Integer> dayHostHitsPerDayYear = aggregateService.getDayOfYearHostHits().getHits();
+        assertEquals(6, dayHostHitsPerDayYear.get(new DayOfYearHost(2025, 11, Support.ipToInterface("44.255.130.211"))));
+
+        Map<DayOfYearBot, Integer> dayBotHitsPerDayYear = aggregateService.getDayOfYearBotHits().getHits();
+        assertEquals(16, dayBotHitsPerDayYear.get(new DayOfYearBot(2025, 305, "gptbot(at)openai.com")));
 
         System.out.println("found: " + caddyLogList.size());
     }
