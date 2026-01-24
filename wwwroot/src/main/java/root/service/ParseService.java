@@ -1,9 +1,20 @@
 package root.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import root.model.CaddyLog;
 
 @Service
+@RequiredArgsConstructor
 public class ParseService {
+
+    private final ObjectMapper mapper;
+
+    public CaddyLog parseLine(String jsonLine) throws Exception {
+        return mapper.readValue(jsonLine, CaddyLog.class);
+    }
+
 
     public void validateHttpVerb() {
 //        $field[$pos_method] eq 'GET'

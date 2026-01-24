@@ -1,5 +1,7 @@
 package root.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gg.jte.CodeResolver;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
@@ -28,6 +30,13 @@ public class ContextConfiguration {
             // Production: Use precompiled templates for maximum performance
             return TemplateEngine.createPrecompiled(ContentType.Html);
         }
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 
 }
