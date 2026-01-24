@@ -49,6 +49,26 @@ public class CounterStore {
 
     @Getter
     @Setter
+    public static class DayOfYearRefererHits {
+        Map<DayOfYearReferer, Integer> hits = new HashMap<>();
+
+        public void addHit(Integer year, int dayOfYear, String referer) {
+            hits.merge(new DayOfYearReferer(year, dayOfYear, referer), 1, Integer::sum);
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class DayOfYearPageHits {
+        Map<DayOfYearPage, Integer> hits = new HashMap<>();
+
+        public void addHit(Integer year, int dayOfYear, String page) {
+            hits.merge(new DayOfYearPage(year, dayOfYear, page), 1, Integer::sum);
+        }
+    }
+
+    @Getter
+    @Setter
     public static class DayOfYearResponseCode {
         Map<DayOfYearCode, Integer> codes = new HashMap<>();
 
