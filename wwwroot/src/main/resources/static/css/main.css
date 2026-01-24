@@ -1,0 +1,116 @@
+header, main, footer {
+    padding-left: 300px;
+}
+
+/* Media Queries for different screen sizes */
+@media only screen and (max-width: 1200px) {
+    header, main, footer {
+        padding-left: 250px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .nav-wrapper {
+        flex-direction: column;
+    }
+    .brand-logo {
+        margin-left: 10px;
+    }
+    .col.s6.m-3 {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .card-products {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .card-product-image img {
+        max-width: 100%;
+    }
+    .card-product-title a {
+        font-size: 1rem;
+    }
+    .card-product-parameters, .card-product-categories {
+        font-size: 0.8rem;
+    }
+}
+
+.sidenav {
+    margin-top: 64px;
+    --sidenav-padding: 10px;
+    --sidenav-item-height: 30px;
+}
+
+.card-product-title {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 5px;
+}
+
+a {
+    color: darkslateblue;
+    font-size: 100%;
+}
+
+.card-product-description {
+    font-size: large;
+      padding: 20px;
+      line-height: 140%;
+      background-color: floralwhite;
+}
+
+.card-product-short {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 5px;
+}
+
+.card {
+    max-width: 498px;
+    background-color: #f0f5f7;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.card-title {
+    color: #d2d8db;
+    text-decoration: underline;
+}
+
+.collapsible-header::after {
+    content: '';
+    /* visibility: none; */
+    display: none;
+}
+
+#email, #password {
+    background-color: #886644;
+    background-clip: content-box;
+}
+
+hr {
+    border-bottom: 1px;
+    color: azure;
+}
+
+.row {
+    --gap-size: 0;
+}
+
+.card-colored {
+    border-radius: 4px;
+}
+
+.card-colored:nth-child(odd) {
+    background-color: #f5f1e5;
+}
