@@ -3,61 +3,44 @@ package root.service;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
-import root.model.DayOfYear;
-import root.model.MonthOfYear;
+import root.model.CounterStore;
 import root.model.CaddyLog;
-import root.model.Host;
-import root.model.Year;
+import root.util.Support;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 @Getter
 @Setter
 public class AggregateService {
 
-    DayOfYearHits dayOfYearHits = new DayOfYearHits();
-    MonthOfYearHits monthOfYearHits = new MonthOfYearHits();
+    CounterStore.DayOfYearHits dayOfYearHits = new CounterStore.DayOfYearHits();
+    CounterStore.MonthOfYearHits monthOfYearHits = new CounterStore.MonthOfYearHits();
+
+    CounterStore.DayOfYearHostHits dayOfYearHostHits = new CounterStore.DayOfYearHostHits();
+    CounterStore.DayOfYearBotHits dayOfYearBotHits = new CounterStore.DayOfYearBotHits();
+    CounterStore.DayOfYearResponseCode dayOfYearResponseCode = new CounterStore.DayOfYearResponseCode();
 
     public void process(CaddyLog caddyLog) {
 
         ZonedDateTime zonedDateTime = caddyLog.getTs().atZone(ZoneId.systemDefault());
         dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
         monthOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal());
-    }
+        dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), Support.ipToInterface(caddyLog.getRequest().remoteIp));
+        dayOfYearResponseCode.addCode(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.status);
 
-    @Getter
-    @Setter
-    public static class DayOfYearHits {
-        Map<DayOfYear, Integer> hits = new HashMap<>();
-
-        public void addHit(Integer year, int dayOfYear) {
-            hits.merge(new DayOfYear(year, dayOfYear), 1, Integer::sum);
+        if (caddyLog.getRequest().headers != null) {
+            List<String> from = caddyLog.getRequest().headers.get("From");
+            if (from != null && !from.isEmpty()) {
+                dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), from.getFirst());
+            }
         }
+
     }
 
-    @Getter
-    @Setter
-    public static class MonthOfYearHits {
-        Map<MonthOfYear, Integer> hits = new HashMap<>();
 
-        public void addHit(int year, int month) {
-            hits.merge(new MonthOfYear(year, month), 1, Integer::sum);
-        }
-    }
-
-    @Getter
-    @Setter
-    public static class DayPerMonthHits {
-        Map<Host, Integer> hostHit = new HashMap<>();
-
-        public void addHit(Integer host, int dayOfYear) {
-            hostHit.merge(new Host(host), 1, Integer::sum);
-        }
-    }
 
 
 }
