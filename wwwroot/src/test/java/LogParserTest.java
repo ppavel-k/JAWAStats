@@ -1,17 +1,14 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import root.model.CaddyLog;
-import root.model.CounterStore;
-import root.model.DayOfYear;
-import root.model.DayOfYearBot;
-import root.model.DayOfYearCode;
-import root.model.DayOfYearHost;
-import root.model.DayOfYearPage;
-import root.model.DayOfYearReferer;
+import root.model.aggregation.DayOfYear;
+import root.model.aggregation.DayOfYearBot;
+import root.model.aggregation.DayOfYearCode;
+import root.model.aggregation.DayOfYearHost;
+import root.model.aggregation.DayOfYearPage;
+import root.model.aggregation.DayOfYearReferer;
 import root.model.MonthOfYear;
-import root.model.Year;
 import root.service.AggregateService;
 import root.service.ParseService;
 import root.util.Support;
@@ -27,7 +24,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static root.util.Support.interfaceToIp;
 
 public class LogParserTest {
 

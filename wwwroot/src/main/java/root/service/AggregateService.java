@@ -24,8 +24,8 @@ public class AggregateService {
     CounterStore.DayOfYearResponseCode dayOfYearResponseCode = new CounterStore.DayOfYearResponseCode();
 
     CounterStore.DayOfYearRefererHits dayOfYearRefererHits = new CounterStore.DayOfYearRefererHits();
-
     CounterStore.DayOfYearPageHits dayOfYearPageHits = new CounterStore.DayOfYearPageHits();
+
 
 
     public void process(CaddyLog caddyLog) {

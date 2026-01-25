@@ -2,6 +2,12 @@ package root.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import root.model.aggregation.DayOfYear;
+import root.model.aggregation.DayOfYearBot;
+import root.model.aggregation.DayOfYearCode;
+import root.model.aggregation.DayOfYearHost;
+import root.model.aggregation.DayOfYearPage;
+import root.model.aggregation.DayOfYearReferer;
 
 import java.util.HashMap;
 import java.util.Map;
