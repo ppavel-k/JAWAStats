@@ -12,7 +12,9 @@ import root.service.ReportService;
 @RequiredArgsConstructor
 public class IndexController {
 
-    public static final String ROOT = "a";
+    public static final String ROOT = "";
+
+    private final ReportService reportService;
 
     private final ReportService reportService;
 
