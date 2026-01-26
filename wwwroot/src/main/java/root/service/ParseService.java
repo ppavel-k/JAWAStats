@@ -1,20 +1,50 @@
 package root.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import root.model.CaddyLog;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class ParseService {
 
     private final ObjectMapper mapper;
+    private final AggregateService aggregateService;
 
-    public CaddyLog parseLine(String jsonLine) throws Exception {
-        return mapper.readValue(jsonLine, CaddyLog.class);
+    public List<CaddyLog> doParse(Path logPath) throws IOException {
+        return processLog(logPath);
     }
 
+
+    @Nonnull
+    List<CaddyLog> processLog(Path path) throws IOException {
+        List<CaddyLog> caddyLogList;
+        try (Stream<String> lines = Files.lines(path)) {
+            caddyLogList = lines.skip(0)
+                    .limit(256)
+                    .map(line -> {
+                        try {
+                            CaddyLog caddyLog = mapper.readValue(line, CaddyLog.class);
+                            aggregateService.process(caddyLog);
+                            return caddyLog;
+                        } catch (Exception e) {
+                            return null; // Handle or log malformed lines
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+        }
+        return caddyLogList;
+    }
 
     public void validateHttpVerb() {
 //        $field[$pos_method] eq 'GET'
