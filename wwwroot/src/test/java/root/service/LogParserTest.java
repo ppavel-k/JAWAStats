@@ -1,3 +1,5 @@
+package root.service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -9,24 +11,18 @@ import root.model.aggregation.DayOfYearHost;
 import root.model.aggregation.DayOfYearPage;
 import root.model.aggregation.DayOfYearReferer;
 import root.model.MonthOfYear;
-import root.service.AggregateService;
-import root.service.ParseService;
 import root.util.Support;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LogParserTest {
-
 
     @Test
     void parseLog() throws IOException, URISyntaxException {
@@ -35,28 +31,13 @@ public class LogParserTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
-        ParseService parseService = new ParseService(mapper);
         AggregateService aggregateService = new AggregateService();
+        ParseService parseService = new ParseService(mapper, aggregateService);
 
         URL resource = getClass().getClassLoader().getResource("caddy.log");
         Path path = Path.of(resource.toURI());
 
-        List<CaddyLog> caddyLogList;
-        try (Stream<String> lines = Files.lines(path)) {
-            caddyLogList = lines.skip(0)
-                    .limit(256)
-                    .map(line -> {
-                        try {
-                            CaddyLog caddyLog = parseService.parseLine(line);
-                            aggregateService.process(caddyLog);
-                            return caddyLog;
-                        } catch (Exception e) {
-                            return null; // Handle or log malformed lines
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .toList();
-        }
+        List<CaddyLog> caddyLogList = parseService.processLog(path);
 
         assertEquals(97, caddyLogList.size());
         Map<DayOfYear, Integer> dayHitsPerYear = aggregateService.getDayOfYearHits().getHits();

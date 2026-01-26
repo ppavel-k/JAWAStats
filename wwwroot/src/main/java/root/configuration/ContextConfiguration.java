@@ -9,12 +9,12 @@ import gg.jte.resolve.DirectoryCodeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import root.service.MainService;
+import root.service.ReportService;
 
 import java.nio.file.Paths;
 
 @Configuration
-@Import({MainService.class})
+@Import({ReportService.class})
 public class ContextConfiguration {
 
     @Bean

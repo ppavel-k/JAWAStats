@@ -1,31 +1,10 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+package root.service;
+
 import org.junit.jupiter.api.Test;
-import root.model.CaddyLog;
-import root.model.MonthOfYear;
-import root.model.aggregation.DayOfYear;
-import root.model.aggregation.DayOfYearBot;
-import root.model.aggregation.DayOfYearCode;
-import root.model.aggregation.DayOfYearHost;
-import root.model.aggregation.DayOfYearPage;
-import root.model.aggregation.DayOfYearReferer;
 import root.model.view.Month;
 import root.model.view.Year;
-import root.service.AggregateService;
-import root.service.ParseService;
-import root.service.ReportService;
-import root.util.Support;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -16,6 +16,8 @@ import java.util.List;
 @Setter
 public class AggregateService {
 
+    ZonedDateTime lastProcessedLineDateTime = null;
+
     CounterStore.DayOfYearHits dayOfYearHits = new CounterStore.DayOfYearHits();
     CounterStore.MonthOfYearHits monthOfYearHits = new CounterStore.MonthOfYearHits();
 
@@ -26,11 +28,17 @@ public class AggregateService {
     CounterStore.DayOfYearRefererHits dayOfYearRefererHits = new CounterStore.DayOfYearRefererHits();
     CounterStore.DayOfYearPageHits dayOfYearPageHits = new CounterStore.DayOfYearPageHits();
 
-
-
     public void process(CaddyLog caddyLog) {
 
         ZonedDateTime zonedDateTime = caddyLog.getTs().atZone(ZoneId.systemDefault());
+
+        if (lastProcessedLineDateTime != null && !zonedDateTime.isAfter(lastProcessedLineDateTime)) {
+            // System.out.println("skip");
+            return;
+        }
+
+        lastProcessedLineDateTime = zonedDateTime;
+
         dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
         monthOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal());
         dayOfYearResponseCode.addCode(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.status);
