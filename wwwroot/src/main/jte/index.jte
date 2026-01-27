@@ -1,11 +1,10 @@
 @import root.model.Report
 @import root.model.view.Month
 @import java.time.LocalDate
-@import java.time.format.DateTimeFormatter
-@import java.util.List
 @import java.util.Map
 
 @param Report overview
+@param String monthlyView
 
 @template.mainLayout(
 centralViewPort = @`
@@ -101,6 +100,7 @@ centralViewPort = @`
                                 <td align="right">
                                     @if (day.getMonth().getValue() - 1 == month.getMonthName().ordinal())
                                         <strong>${day.getDayOfMonth()}</strong>
+
                                     @else
                                         <span style="color: lightgrey">${day.getDayOfMonth()}</span>
                                     @endif
@@ -110,7 +110,12 @@ centralViewPort = @`
                     @endfor
                     <tr>
                         <td colspan="7">
+                            <table>
+                                <tr>
+                                    $unsafe{monthlyView}
                             &nbsp;
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 @endfor
