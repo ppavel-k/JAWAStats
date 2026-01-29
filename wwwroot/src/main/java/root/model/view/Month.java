@@ -17,6 +17,7 @@ public class Month {
 
     MonthName monthName;
     List<List<LocalDate>> monthWeeks;
+    int firstWeekNumber;
 
     /**
      *
@@ -49,5 +50,6 @@ public class Month {
             // Always subtract 1 from the current start of the week
             firstWeek.addFirst(firstWeek.getFirst().minusDays(1));
         }
+        this.firstWeekNumber = start.get(weekFields.weekOfWeekBasedYear());
     }
 }

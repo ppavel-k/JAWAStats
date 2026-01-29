@@ -1,4 +1,4 @@
-package root.model;
+package root.model.aggregation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +19,8 @@ public class MonthOfYear {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        MonthOfYear month1 = (MonthOfYear) o;
-        return Objects.equals(year, month1.year) && Objects.equals(month, month1.month);
+        MonthOfYear that = (MonthOfYear) o;
+        return Objects.equals(year, that.year) && Objects.equals(month, that.month);
     }
 
     @Override
