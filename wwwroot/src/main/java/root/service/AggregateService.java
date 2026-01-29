@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import root.model.CounterStore;
 import root.model.CaddyLog;
+import root.model.aggregation.DayOfYear;
 import root.util.Support;
 
 import java.time.ZoneId;
@@ -15,6 +16,8 @@ import java.util.List;
 @Getter
 @Setter
 public class AggregateService {
+
+    int maxHitsValue = 0;
 
     ZonedDateTime lastProcessedLineDateTime = null;
 
@@ -39,7 +42,13 @@ public class AggregateService {
 
         lastProcessedLineDateTime = zonedDateTime;
 
-        dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
+        Integer hitCount = dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
+        // TODO: Split by year
+        if (hitCount < maxHitsValue) {
+            maxHitsValue = hitCount;
+        }
+
+
         monthOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal());
         dayOfYearResponseCode.addCode(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.status);
 

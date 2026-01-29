@@ -23,14 +23,14 @@ public class IndexController {
     public String index(Model model) {
         int currentYearValue = LocalDate.now().getYear();
         model.addAttribute("overview", reportService.getOverview(currentYearValue));
-        model.addAttribute("monthlyView", reportService.getPerMonth(currentYearValue));
+        model.addAttribute("monthlyView", reportService.getWeeklyGraph(currentYearValue));
         return "index";
     }
 
     @GetMapping(value = "year/{year}")
     public String viewYear(@PathVariable Integer year, Model model) {
         model.addAttribute("overview", reportService.getOverview(year));
-        model.addAttribute("monthlyView", reportService.getPerMonth(year));
+        model.addAttribute("monthlyView", reportService.getWeeklyGraph(year));
         return "index";
     }
 

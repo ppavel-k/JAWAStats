@@ -8,6 +8,7 @@ import root.model.aggregation.DayOfYearCode;
 import root.model.aggregation.DayOfYearHost;
 import root.model.aggregation.DayOfYearPage;
 import root.model.aggregation.DayOfYearReferer;
+import root.model.aggregation.MonthOfYear;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,9 @@ public class CounterStore {
     public static class DayOfYearHits {
         Map<DayOfYear, Integer> hits = new HashMap<>();
 
-        public void addHit(Integer year, int dayOfYear) {
-            hits.merge(new DayOfYear(year, dayOfYear), 1, Integer::sum);
+        public Integer addHit(Integer year, int dayOfYear) {
+            DayOfYear key = new DayOfYear(year, dayOfYear);
+            return hits.merge(key, 1, Integer::sum);
         }
     }
 
@@ -83,13 +85,4 @@ public class CounterStore {
         }
     }
 
-    @Getter
-    @Setter
-    public static class DayPerMonthHits {
-        Map<Host, Integer> hostHit = new HashMap<>();
-
-        public void addHit(Integer host, int dayOfYear) {
-            hostHit.merge(new Host(host), 1, Integer::sum);
-        }
-    }
 }

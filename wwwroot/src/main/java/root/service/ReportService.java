@@ -1,15 +1,18 @@
 package root.service;
 
+import jakarta.annotation.Nonnull;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import root.model.Report;
+import root.model.aggregation.DayOfYear;
 import root.model.view.Year;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
@@ -22,9 +25,9 @@ public class ReportService {
     private final AggregateService aggregateService;
     private final ParseService parseService;
 
-    public Report getOverview(int currentYearValue1) {
+    public Report getOverview(int currentYearValue) {
 
-        Year currentYear = new Year(currentYearValue1);
+        Year currentYear = new Year(currentYearValue);
 
         Path logFilePath = Path.of("wwwroot/src/test/resources/caddy.log");
         System.out.println("Will process log file " + logFilePath);
@@ -37,28 +40,75 @@ public class ReportService {
         }
     }
 
-    public String getPerMonth(int currentYearValue) {
-        int[] scaled = stream(getSevenDays()).map(x -> (int) round(((x - 1) * 15.0 / 127.0) + 1)).toArray();
-        AtomicInteger i = new AtomicInteger(0);
-        String data = stream(scaled).mapToObj(s ->
-        {
-            int height = s * 10;
-            String style = String.format("style='height:%dpx; background-color:%s; color:white;" +
-                    "display:inline-block; width:25px; margin:2px; vertical-align:bottom;" +
-                    "text-align:center;font-family:Arial'", height, getColors(i.getAndIncrement()));
-            return "<td " + style + ">" + s + "</td>";
-        }).collect(Collectors.joining(""));
-        return data;
+    public Map<Integer, String> getWeeklyGraph(int year) {
+
+        Map<Integer, String> weekDistribution = new HashMap<>();
+
+        Map<DayOfYear, Integer> hits = aggregateService.getDayOfYearHits().getHits();
+        Map<Integer, WeekValues> weeks = groupDaysByWeek(year % 2000, hits);
+
+        for (Map.Entry<Integer, WeekValues> entry: weeks.entrySet()) {
+            String data = getWeekGraph(entry.getValue().getValues());
+            weekDistribution.put(entry.getKey(), data);
+        }
+        return weekDistribution;
     }
 
-    private String getColors(int i) {
+    public static String getEmptyWeekGraph() {
+        return getWeekGraph(new int[] {0, 0, 0, 0, 0, 0, 0});
+    }
+
+    @Nonnull
+    private static String getWeekGraph(int[] values) {
+        long max = Integer.toUnsignedLong(stream(values).max().orElse(0));
+        int[] scaled = stream(values).map(x -> x < 1 ? 1 : (int) round(((x - 1) * 15.0 / max) + 1)).toArray();
+        AtomicInteger i = new AtomicInteger(0);
+        return stream(scaled).mapToObj(s -> {
+            int height = max == 0 || values[i.get()] == 0 ? 1 : s * 5;
+            String style = String.format("style='height:%dpx; background-color:%s; color:white;" +
+                    "display:block; width:25px; margin:0px; " +
+                    "text-align:center;font-family:Arial'", height, getColors(i.get()));
+            String result = "<td style='vertical-align:bottom;'><div " + style + ">"
+                    + (values[i.get()] == 0 ? "" : values[i.get()]) + "</div></td>";
+            i.incrementAndGet();
+            return result;
+        }).collect(Collectors.joining(""));
+    }
+
+    private Map<Integer, WeekValues> groupDaysByWeek(int year, Map<DayOfYear, Integer> hits) {
+
+        Map<Integer, WeekValues> weekView = new HashMap<>();
+
+        hits.forEach((date, count) -> {
+            if (year != date.getYear()) {
+                return;
+            }
+
+            int weekNumber = date.getWeekNumber();
+            weekView.putIfAbsent(weekNumber, new WeekValues());
+            weekView.get(weekNumber).set(date.getDayOfWeekNumber(), count);
+        });
+        return weekView;
+    }
+
+    private static String getColors(int i) {
         String[] colors = {"5d5fef", "4ecdc4", "6bcb77", "ff8066", "ffd93d", "ff6b6b", "a29bfe"};
         return "#" + colors[i];
     }
 
-    private int[] getSevenDays() {
-        return RandomGenerator.getDefault()
-                .ints(7, 0, 129) // 7 numbers, from 0 (inclusive) to 129 (exclusive)
-                .toArray();
+//    private int[] getSevenDays() {
+//        return RandomGenerator.getDefault()
+//                .ints(7, 0, 129) // 7 numbers, from 0 (inclusive) to 129 (exclusive)
+//                .toArray();
+//    }
+
+    @Getter
+    private static class WeekValues {
+        int[] values = new int[7];
+
+        public void set(int dayNum, int value) {
+            values[dayNum] = value;
+        }
+
     }
 }

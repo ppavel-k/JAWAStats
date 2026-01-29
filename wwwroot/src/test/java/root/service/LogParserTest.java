@@ -10,7 +10,7 @@ import root.model.aggregation.DayOfYearCode;
 import root.model.aggregation.DayOfYearHost;
 import root.model.aggregation.DayOfYearPage;
 import root.model.aggregation.DayOfYearReferer;
-import root.model.MonthOfYear;
+import root.model.aggregation.MonthOfYear;
 import root.util.Support;
 
 import java.io.IOException;
