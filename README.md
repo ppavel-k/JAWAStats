@@ -2,6 +2,8 @@
 
 Inspired by end of life AWStats (see below) and focused only on Caddy server side logs.
 
+![img.png](img.png)
+
 Development is in progress.
 
 # AWStats - Advanced Web Statistics
