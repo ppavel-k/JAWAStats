@@ -15,7 +15,7 @@ links, robots and many more...
 
 ## ABOUT THE AUTHOR, LICENSE AND SUPPORT
 
-Copyright (C) since 2026 - ME aka ppavel-k www.abamo.eu www.amame.cz
+Copyright (C) since 2026 - ME aka ppavel-k https://vse.abamo.eu https://www.amame.cz
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,3 +29,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Additionally, this software and derivatives cannot be used in countries:
+Russia, Belorussian, Cuba, Iran, North Corea and any linked companies and associations,
+including occupied territories.
