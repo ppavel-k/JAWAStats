@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import root.model.CounterStore;
 import root.model.CaddyLog;
-import root.model.aggregation.DayOfYear;
 import root.util.Support;
 
 import java.time.ZoneId;
@@ -25,6 +24,7 @@ public class AggregateService {
     CounterStore.MonthOfYearHits monthOfYearHits = new CounterStore.MonthOfYearHits();
 
     CounterStore.DayOfYearHostHits dayOfYearHostHits = new CounterStore.DayOfYearHostHits();
+    CounterStore.DayOfYearHostHits dayOfYearAllHostHits = new CounterStore.DayOfYearHostHits();
     CounterStore.DayOfYearBotHits dayOfYearBotHits = new CounterStore.DayOfYearBotHits();
     CounterStore.DayOfYearResponseCode dayOfYearResponseCode = new CounterStore.DayOfYearResponseCode();
 
@@ -59,12 +59,14 @@ public class AggregateService {
             if (uri.endsWith(".htm") || uri.endsWith(".html")) {
                 dayOfYearPageHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, uri);
             }
-            dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, Support.ipToInterface(caddyLog.getRequest().remoteIp));
+            dayOfYearAllHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, Support.ipToInterface(caddyLog.getRequest().remoteIp));
 
             if (caddyLog.getRequest().headers != null) {
                 List<String> from = caddyLog.getRequest().headers.get("From");
                 if (from != null && !from.isEmpty()) {
                     dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, from.getFirst());
+                } else {
+                    dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, Support.ipToInterface(caddyLog.getRequest().remoteIp));
                 }
 
                 List<String> referer = caddyLog.getRequest().headers.get("Referer");

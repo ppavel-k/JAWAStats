@@ -20,7 +20,7 @@ Referer view
         <tr>
             <td>
                 @for (Map.Entry<DayOfYearReferer, Integer> entry : overview.getAggregate().getDayOfYearRefererHits().getHits().entrySet())
-                    @if (entry.getKey().getYear() == overview.getYear().getYear() && entry.getKey().getMonth() == month.getMonthName().ordinal())
+                    @if (entry.getKey().getYear().equals(overview.getYear().getYear()) && entry.getKey().getMonth() == month.getMonthName().ordinal())
                         ${entry.getKey().getReferer()} : ${entry.getValue()}<br/>
                     @endif
                 @endfor

@@ -12,6 +12,33 @@
     @endfor
     </thead>
     <tr>
+        <td>Page hits:</td>
+        @for (Month month: overview.getYear().getMonths())
+            <td>
+                ${overview.getAggregate().getDayOfYearPageHits().getHits()
+                        .entrySet().stream()
+                        .filter(es ->
+                            es.getKey().getMonth().equals(month.getMonthName().ordinal())
+                            && es.getKey().getYear().equals(overview.getYear().getYear()))
+                        .mapToInt(Map.Entry::getValue)
+                        .sum()}
+            </td>
+        @endfor
+    </tr>
+    <tr>
+        <td>Unique hosts (w/o bots):</td>
+        @for (Month month: overview.getYear().getMonths())
+            <td>
+                ${overview.getAggregate().getDayOfYearHostHits().getHits()
+                        .entrySet().stream()
+                        .filter(es ->
+                            es.getKey().getMonth().equals(month.getMonthName().ordinal())
+                            && es.getKey().getYear().equals(overview.getYear().getYear()))
+                        .count()}
+            </td>
+        @endfor
+    </tr>
+    <tr>
         <td>Total hits:</td>
         @for (Month month: overview.getYear().getMonths())
             <td>
@@ -40,20 +67,6 @@
         @endfor
     </tr>
     <tr>
-        <td>Page hits:</td>
-        @for (Month month: overview.getYear().getMonths())
-            <td>
-                ${overview.getAggregate().getDayOfYearPageHits().getHits()
-                        .entrySet().stream()
-                        .filter(es ->
-                            es.getKey().getMonth().equals(month.getMonthName().ordinal())
-                            && es.getKey().getYear().equals(overview.getYear().getYear()))
-                        .mapToInt(Map.Entry::getValue)
-                        .sum()}
-            </td>
-        @endfor
-    </tr>
-    <tr>
         <td>Asset hits:</td>
         @for (Month month: overview.getYear().getMonths())
             <td>
@@ -67,4 +80,18 @@
             </td>
         @endfor
     </tr>
+    <tr>
+        <td>Unique hosts (incl. bots):</td>
+        @for (Month month: overview.getYear().getMonths())
+            <td>
+                ${overview.getAggregate().getDayOfYearAllHostHits().getHits()
+                        .entrySet().stream()
+                        .filter(es ->
+                            es.getKey().getMonth().equals(month.getMonthName().ordinal())
+                            && es.getKey().getYear().equals(overview.getYear().getYear()))
+                        .count()}
+            </td>
+        @endfor
+    </tr>
+
 </table>

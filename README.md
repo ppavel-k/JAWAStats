@@ -31,5 +31,5 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 Additionally, this software and derivatives cannot be used in countries:
-Russia, Belorussian, Cuba, Iran, North Corea and any linked companies and associations,
+Russia, Belorussia, Cuba, Iran, North Corea and by any linked companies and associations,
 including occupied territories.

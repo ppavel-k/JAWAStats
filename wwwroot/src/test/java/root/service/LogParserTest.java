@@ -46,7 +46,7 @@ public class LogParserTest {
         Map<MonthOfYear, Integer> dayHitsPerMonthYear = aggregateService.getMonthOfYearHits().getHits();
         assertEquals(24, dayHitsPerMonthYear.get(new MonthOfYear(2025, 10)));
 
-        Map<DayOfYearHost, Integer> hostHitsPerDayYear = aggregateService.getDayOfYearHostHits().getHits();
+        Map<DayOfYearHost, Integer> hostHitsPerDayYear = aggregateService.getDayOfYearAllHostHits().getHits();
         assertEquals(6, hostHitsPerDayYear.get(new DayOfYearHost(2025, 11, Support.ipToInterface("44.255.130.211"))));
 
         Map<DayOfYearBot, Integer> botHitsPerDayYear = aggregateService.getDayOfYearBotHits().getHits();
