@@ -5,16 +5,20 @@ import lombok.Setter;
 
 import java.util.Objects;
 
+import static java.time.LocalDate.ofYearDay;
+
 @Getter
 @Setter
 public class DayOfYearHost {
     Integer year; // 0-99
     Integer day; // 0-365
+    Integer month; // 0-11
     Integer host; // 0-255.0-255.0-255.0-255
 
     public DayOfYearHost(Integer year, Integer day, Integer host) {
         this.year = year % 2000;
         this.day = day;
+        this.month = ofYearDay(year, day).getMonthValue() - 1;
         this.host = host;
     }
 
