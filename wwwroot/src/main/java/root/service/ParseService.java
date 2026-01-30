@@ -30,7 +30,7 @@ public class ParseService {
         List<CaddyLog> caddyLogList;
         try (Stream<String> lines = Files.lines(path)) {
             caddyLogList = lines.skip(0)
-                    .limit(256)
+                    .limit(204800)
                     .map(line -> {
                         try {
                             CaddyLog caddyLog = mapper.readValue(line, CaddyLog.class);

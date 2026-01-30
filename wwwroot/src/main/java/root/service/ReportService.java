@@ -29,7 +29,7 @@ public class ReportService {
 
         Year currentYear = new Year(currentYearValue);
 
-        Path logFilePath = Path.of("wwwroot/src/test/resources/caddy.log");
+        Path logFilePath = Path.of("wwwroot/src/test/resources/access.log");
         System.out.println("Will process log file " + logFilePath);
 
         try {
@@ -95,12 +95,6 @@ public class ReportService {
         String[] colors = {"5d5fef", "4ecdc4", "6bcb77", "ff8066", "ffd93d", "ff6b6b", "a29bfe"};
         return "#" + colors[i];
     }
-
-//    private int[] getSevenDays() {
-//        return RandomGenerator.getDefault()
-//                .ints(7, 0, 129) // 7 numbers, from 0 (inclusive) to 129 (exclusive)
-//                .toArray();
-//    }
 
     @Getter
     private static class WeekValues {

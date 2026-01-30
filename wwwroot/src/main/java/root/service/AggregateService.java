@@ -30,6 +30,7 @@ public class AggregateService {
 
     CounterStore.DayOfYearRefererHits dayOfYearRefererHits = new CounterStore.DayOfYearRefererHits();
     CounterStore.DayOfYearPageHits dayOfYearPageHits = new CounterStore.DayOfYearPageHits();
+    CounterStore.DayOfYearPageHits dayOfYearAssetHits = new CounterStore.DayOfYearPageHits();
 
     public void process(CaddyLog caddyLog) {
 
@@ -48,23 +49,27 @@ public class AggregateService {
             maxHitsValue = hitCount;
         }
 
-
         monthOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal());
         dayOfYearResponseCode.addCode(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.status);
 
-        if (caddyLog.getRequest() != null) {
-            dayOfYearPageHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), caddyLog.getRequest().uri);
-            dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getMonth().ordinal(), Support.ipToInterface(caddyLog.getRequest().remoteIp));
+        if (caddyLog.getRequest() != null && caddyLog.getStatus() == 200) {
+            String uri = caddyLog.getRequest().uri;
+            dayOfYearAssetHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, uri);
+
+            if (uri.endsWith(".htm") || uri.endsWith(".html")) {
+                dayOfYearPageHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, uri);
+            }
+            dayOfYearHostHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, Support.ipToInterface(caddyLog.getRequest().remoteIp));
 
             if (caddyLog.getRequest().headers != null) {
                 List<String> from = caddyLog.getRequest().headers.get("From");
                 if (from != null && !from.isEmpty()) {
-                    dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), from.getFirst());
+                    dayOfYearBotHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, from.getFirst());
                 }
 
                 List<String> referer = caddyLog.getRequest().headers.get("Referer");
-                if (referer != null && !referer.isEmpty()) {
-                    dayOfYearRefererHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear(), referer.getFirst());
+                if (referer != null && !referer.isEmpty() && !referer.getFirst().contains(caddyLog.getRequest().host)) {
+                    dayOfYearRefererHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear() - 1, referer.getFirst());
                 }
 
             }
@@ -73,9 +78,9 @@ public class AggregateService {
             // add search phrases
             // add browsers
             // add browser languages
+        } else {
+            // todo: add missing resource count
         }
-
-        // store processed date (and line)
 
     }
 

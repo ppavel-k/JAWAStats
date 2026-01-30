@@ -2,6 +2,7 @@
 @import root.model.view.Month
 @import root.service.ReportService
 @import java.time.LocalDate
+@import java.time.format.DateTimeFormatter
 @import java.util.Map
 
 @param Report overview
@@ -11,7 +12,7 @@
 centralViewPort = @`
 
     <div class="col s12">
-        <h5 style="text-align: right; padding-right: 4%;">Stat</h5>
+        <h5 style="text-align: right; padding-right: 4%;">Last processed date ${overview.getAggregate().getLastProcessedLineDateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))}</h5>
     </div>
 
     <div class="container" style="margin-left: 3%;">
@@ -32,96 +33,13 @@ centralViewPort = @`
 
             <br/><br/><br/>
 
-            Total hits:
-            <table>
-                <thead>
-                @for (Month month: overview.getYear().getMonths())
-                    <th>${month.getMonthName().getShortName()}</th>
-                @endfor
-                </thead>
-                <tr>
-                    @for (Month month: overview.getYear().getMonths())
-                        <td>
-                            ${overview.getAggregate().getMonthOfYearHits().getHits()
-                                    .entrySet().stream()
-                                    .filter(es ->
-                                        es.getKey().getMonth().equals(month.getMonthName().ordinal())
-                                        && es.getKey().getYear().equals(overview.getYear().getYear()))
-                                    .map(Map.Entry::getValue)
-                                    .findFirst().orElse(0)}
-                        </td>
-                    @endfor
-                </tr>
-            </table>
+            @template.monthlyView(overview = overview)
 
             <br/><br/><br/>
-
-            Bot hits:
-            <table>
-                <thead>
-                @for (Month month: overview.getYear().getMonths())
-                    <th>${month.getMonthName().getShortName()}</th>
-                @endfor
-                </thead>
-                <tr>
-                    @for (Month month: overview.getYear().getMonths())
-                        <td>
-                            ${overview.getAggregate().getDayOfYearBotHits().getHits()
-                                    .entrySet().stream()
-                                    .filter(es ->
-                                        es.getKey().getMonth().equals(month.getMonthName().ordinal())
-                                        && es.getKey().getYear().equals(overview.getYear().getYear()))
-                                    .mapToInt(Map.Entry::getValue)
-                                    .sum()}
-                        </td>
-                    @endfor
-                </tr>
-            </table>
+            @template.weeklyView(overview = overview, monthlyView = monthlyView)
 
             <br/><br/><br/>
-
-            Weekly view
-            <table>
-                @for (Month month: overview.getYear().getMonths())
-                    <tr>
-                        <td colspan="7">
-                            <br/>
-                            <br/>
-                            <br/>
-                            ${month.getMonthName().getFullName()}
-                        </td>
-                    </tr>
-                    @for (int i = 0; i < month.getMonthWeeks().size(); i++)
-                        !{boolean isReported = false;}
-                        @for(Map.Entry<Integer, String> entry : monthlyView.entrySet())
-                            @if (entry.getKey().equals(month.getFirstWeekNumber() + i))
-                                !{isReported = true;}
-                                <tr>
-                                    $unsafe{entry.getValue()}
-                                </tr>
-                            @endif
-                        @endfor
-                        @if (!isReported)
-                            <tr>
-                                $unsafe{ReportService.getEmptyWeekGraph()}
-                            </tr>
-                        @endif
-                        <tr>
-                            @for (LocalDate day : month.getMonthWeeks().get(i))
-                                <td align="right">
-                                    @if (day.getMonth().getValue() - 1 == month.getMonthName().ordinal())
-                                        <strong>${day.getDayOfMonth()}</strong>
-
-                                    @else
-                                        <span style="color: lightgrey">${day.getDayOfMonth()}</span>
-                                    @endif
-                                </td>
-                            @endfor
-                        </tr>
-                    @endfor
-                @endfor
-            </table>
-
+            @template.refererView(overview = overview, monthlyView = monthlyView)
 
         </div>
 
