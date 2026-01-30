@@ -3,6 +3,7 @@ package root.model.aggregation;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -10,12 +11,14 @@ import java.util.Objects;
 public class DayOfYearReferer {
     Integer year; // 0-99
     Integer day; // 0-365
+    int month;
     String referer;
 
     public DayOfYearReferer(Integer year, Integer day, String referer) {
         this.year = year % 2000;
         this.day = day;
         this.referer = referer;
+        this.month = LocalDate.ofYearDay(year, day).getMonthValue() - 1;
     }
 
     @Override
