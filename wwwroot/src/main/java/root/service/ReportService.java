@@ -66,10 +66,10 @@ public class ReportService {
         return stream(scaled).mapToObj(s -> {
             int height = max == 0 || values[i.get()] == 0 ? 1 : s * 5;
             String style = String.format("style='height:%dpx; background-color:%s; color:white;" +
-                    "display:block; width:25px; margin:0px; " +
+                    "display:block; width:50px; margin:0px; padding-bottom: 2px;" +
                     "text-align:center;font-family:Arial'", height, getColors(i.get()));
-            String result = "<td style='vertical-align:bottom;'><div " + style + ">"
-                    + (values[i.get()] == 0 ? "" : values[i.get()]) + "</div></td>";
+            String result = "<td style='vertical-align:bottom; text-align: center;'>" + (values[i.get()] == 0 ? "" : values[i.get()]) +
+                    "<div " + style + "></div></td>";
             i.incrementAndGet();
             return result;
         }).collect(Collectors.joining(""));

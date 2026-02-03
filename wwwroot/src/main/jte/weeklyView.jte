@@ -12,8 +12,8 @@ Weekly view
     @for (Month month: overview.getYear().getMonths())
         <tr>
             <td colspan="7">
-                <br/><br/><br/>
-                ${month.getMonthName().getFullName()}
+                <hr/>
+                <h2>${month.getMonthName().getFullName()}</h2>
             </td>
         </tr>
         @for (int i = 0; i < month.getMonthWeeks().size(); i++)
