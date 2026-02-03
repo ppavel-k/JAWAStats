@@ -4,6 +4,7 @@
 @import java.time.LocalDate
 @import java.time.format.DateTimeFormatter
 @import java.util.Map
+@import java.util.stream.Collectors
 
 @param Report overview
 @param Map<Integer, String> monthlyView
@@ -17,7 +18,8 @@ centralViewPort = @`
 
     <div class="container" style="margin-left: 3%;">
         <div class="masonry row">
-
+            <h2>Site(s): ${String.join(", ", overview.getAggregate().getHosts())}</h2>
+            <hr/>
             Available years:
             <table>
                 <tr>

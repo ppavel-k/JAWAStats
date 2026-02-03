@@ -2,7 +2,7 @@
 
 Inspired by end of life AWStats (see below) and focused only on Caddy server side logs.
 
-![img_1.png](img_1.png)
+![img.png](img.png)
 
 Development is in progress.
 

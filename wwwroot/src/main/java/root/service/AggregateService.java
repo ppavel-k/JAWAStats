@@ -9,7 +9,9 @@ import root.util.Support;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Getter
@@ -19,6 +21,8 @@ public class AggregateService {
     int maxHitsValue = 0;
 
     ZonedDateTime lastProcessedLineDateTime = null;
+
+    Set<String> hosts = new HashSet<>();
 
     CounterStore.DayOfYearHits dayOfYearHits = new CounterStore.DayOfYearHits();
     CounterStore.MonthOfYearHits monthOfYearHits = new CounterStore.MonthOfYearHits();
@@ -42,6 +46,8 @@ public class AggregateService {
         }
 
         lastProcessedLineDateTime = zonedDateTime;
+
+        hosts.add(caddyLog.getRequest().host);
 
         Integer hitCount = dayOfYearHits.addHit(zonedDateTime.getYear(), zonedDateTime.getDayOfYear());
         // TODO: Split by year
